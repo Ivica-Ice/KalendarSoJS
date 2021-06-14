@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ivica Tabeli</title>
+    <meta charset="utf-8">
+    <style>
+        #kalendar {
+            border: 4px solid darkblue;
+            border-collapse: collapse;
+        }
+
+        #kalendar thead tr th {
+            font-size: 10pt;
+            background-color: #57A;
+            color: #ffffff;
+        }
+
+        #kalendar tbody tr td {
+            text-align: right;
+            vertical-align: top;
+            padding: 5px;
+            border: 1px dashed #57A;
+            width: 30px;
+            height: 30px;
+        }
+
+        #kalendar tbody tr:nth-child(odd) td {
+            background-color: #F8f8f8;
+        }
+
+        #kalendar tbody tr td:nth-child(7) {
+            background-color: #FA9;
+        }
+
+        #kalendar tbody tr td:nth-child(6) {
+            background-color: #EEE;
+        }
+
+        .current {
+            background-color: #dc0000;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table id="kalendar">
+        <thead>
+            <tr>
+                <th colspan="7" id="title">
+            <tr>
+                <th>Pon
+                <th>Uto
+                <th>Sre
+                <th>Cet
+                <th>Pet
+                <th>Sab
+                <th>Ned
+        <tbody id="dani">
+
+    </table>
+    <script>
+
+        function resetKalendar() {
+            document.getElementById('title').innerText = '';
+            document.getElementById('dani').innerHTML = '';
+
+        }
+
+        function popolniKalendar(godina, mesec) {
+            resetKalendar();
+            let iminjaMeseci = [
+                'januar', 'februar', 'mart', 'april', 'maj',
+                'juni', 'juli', 'avgust', 'septemvri', 'oktomvri',
+                'noemvri', 'dekemvri'
+            ]
+
+            let imeIzbranMesec = iminjaMeseci[mesec - 1];
+            let title = imeIzbranMesec + ' ' + godina;
+
+            document.getElementById('title').innerText = title;
+
+            let prvDen = new Date(godina, mesec - 1, 1);
+            let posledenDen = new Date(godina, mesec, 0);
+
+            let prvDenVoNedelata = prvDen.getDay();
+            if (prvDenVoNedelata == 0) prvDenVoNedelata = 7;
+
+            let posDenVoNedelata = posledenDen.getDay();
+            if (posDenVoNedelata == 0) posDenVoNedelata = 7;
+
+            let brojDenovi = posledenDen.getDate();
+
+            let denovi = [];
+
+            for (let i = 1; i < prvDenVoNedelata; i++) {
+                denovi.push('');
+            }
+            for (let den = 1; den <= brojDenovi; den++) {
+                denovi.push(den);
+            }
+
+            for (let i = posDenVoNedelata; i < 7; i++) {
+                denovi.push('');
+            }
+
+            let nedeli = [];
+
+            while (denovi.length > 0) {
+                let narednaNedela = denovi.splice(0, 7);
+                nedeli.push(narednaNedela);
+            }
+
+            popolniTeloKalendar(nedeli);
+        }
+
+        function popolniTeloKalendar(nedeli) {
+            for (let nedela of nedeli) {
+                let tr = document.createElement('tr');
+
+                for (let den of nedela) {
+                    let td = document.createElement('td');
+                    td.innerHTML = den;
+                    tr.appendChild(td);
+                }
+                document.getElementById('dani').appendChild(tr);
+            }
+        }
+
+        window.addEventListener('load', main);
+        function main() {
+            let sega = new Date();
+            popolniKalendar(sega.getFullYear(), sega.getMonth() + 1);
+        }
+    </script>
+</body>
+
+</html>
